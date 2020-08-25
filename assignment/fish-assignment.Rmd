@@ -1,0 +1,215 @@
+---
+title: "Are the Fisheries Really Collapsed?"
+author: "Alice Hua and Julie Lum"
+Date: "Oct. 16. 2019"
+output: github_document
+---
+# Assessment 1: Fisheries Collapse Module
+
+This module will focus on understanding and replicating fisheries stock assessment data and fisheries collapse. 
+
+Instead of working with independent dataframes, we are working with a large relational database which contains many different tables of different sizes and shapes, but that all relates to eachother through a series of different ids.
+
+
+## The Database & Reading in the tables
+
+We used data from the [RAM Legacy Stock Assessment Database](https://doi.org/10.5281/zenodo.2542918)
+
+We loaded the necessary required libraries. In this assignment, this includes `ggbubr`, `tidyverse`, `readxl`, and `ramlegacy`.
+
+```{r message = FALSE}
+knitr::opts_chunk$set(message = FALSE)
+library("ggpubr")
+library("tidyverse")
+library("readxl")
+library('ramlegacy')
+download_ramlegacy()
+ram <- ramlegacy::load_ramlegacy()
+names(ram)
+```
+
+# Exercise 1: Investigating the North-Atlantic Cod
+
+In this first portion of the analysis, We sought to replicate the following figure from the Millenium Ecosystem Assessment Project using the RAM data. 
+
+![](http://espm-157.carlboettiger.info/img/cod.jpg)
+
+For data exploration, we joined the following tables because there were all separated by a common primary id. The combination of tables are the stock, area, metrics and time series. We noticed that there are multiple identifiers for each given category, for example, a species can be identified by both scientific name and common name.
+```{r}
+stock_area_metric <- 
+  ram$timeseries %>% 
+  left_join(ram$stock) %>% 
+  left_join(ram$area) %>% 
+  left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) 
+head(stock_area_metric)
+```
+
+Here we are interested in only looking at Cod in North America from 1850 to 2014. We used the stock information of Total catch accounted for landings and discards in metric tons. This is to account for all fishes caught and prevent double counting.
+
+```{r}
+Cod_NA <- ram$timeseries %>% 
+  left_join(ram$stock) %>% 
+  left_join(ram$area) %>% 
+  left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) %>%
+  filter(country == "Canada"| country == "USA", scientificname == "Gadus morhua")%>% 
+  filter(tslong == "Total catch (i.e. landings + discards. Add landings + discards to get this).") %>%
+  arrange(tsyear)
+head(Cod_NA)
+```
+
+Here is a grid of graphs of Cod caught between 1850 and 2014 in North America (USA and Canada) where each graph is displaying the amount of Cod caught in a specific area name. You can see that the majority of Cod is caught in Southern Labrador-Eastern Newfoundland. Cod fishing did not happen in other areas before 1950. To compare our analysis to Worm's study, we noticed that their finding indicated that the Cod landing in ton dropped to 0 in 1992. We made additional graphs below to understand this discrepancy.
+```{r fig.width=14, fig.height=9}
+north_america <- ram$timeseries %>%
+  left_join(ram$stock) %>%
+  left_join(ram$area) %>% 
+  left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) %>%
+  filter(country == "Canada"| country == "USA", scientificname == "Gadus morhua")%>% 
+  filter(tslong == "Total catch (i.e. landings + discards. Add landings + discards to get this).")%>% 
+  group_by(tsyear, areaname) %>% 
+  summarize(sum = sum(tsvalue, na.rm = T))
+north_america %>%
+    ggplot(aes(tsyear, sum, color = areaname)) +
+    geom_line(size=1)+
+    facet_grid(rows = vars(areaname)) +
+    scale_y_continuous(breaks=seq(from=0, to=900000, by = 100000))+
+    geom_vline(xintercept = 1992, color = "red") +
+    theme(text = element_text(size=12))+
+    scale_y_continuous(labels=scales::comma) +
+    geom_hline(yintercept = 1992, color = "red") +
+    labs(title = "Caught in North Americ", 
+       x= "Time (Year)",
+       y= "Total caught") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey50"),
+  panel.ontop = TRUE
+)
+```
+
+Here we have the first graph showing only Cod caught in Southern Labrador-Eastern Newfoundland and the second is showing Cod caught in all of North America (adding all Cod from all areas of North America). We observe that the Newfoundland only Cod more closely resembled Worm's finding compared to the Cod caught in all of North America. Though the Cod landing is not exactly at 0 in 1992 in our Newfoundland graph, we suspect that there may have been updates to the database since the study was published or perhaps Worm filtered for a different type of catch (tslong). 
+
+```{r fig.width=20, fig.height=7}
+newfoundland_graph <- north_america %>%
+    filter(areaname=="Southern Labrador-Eastern Newfoundland") %>%
+    ggplot(aes(tsyear, sum)) +
+    geom_line(size=1, color="blue")+
+    scale_y_continuous(breaks=seq(from=0, to=900000, by = 100000))+
+    geom_vline(xintercept = 1992, color = "red") +
+    theme(text = element_text(size=12))+
+    scale_y_continuous(labels=scales::comma) +
+    geom_hline(yintercept = 1992, color = "red") +
+    labs(title = "Cod caught in Southern Labrador-Eastern Newfoundland", 
+       x= "Time (Year)",
+       y= "Total Caught") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey50"),
+  panel.ontop = TRUE
+)
+
+northamerica_graph <- north_america %>%
+    ungroup() %>%
+    group_by(tsyear) %>%
+    summarize(sum = sum(sum)) %>%
+    ggplot(aes(tsyear, sum)) +
+    geom_line(size=1)+
+    scale_y_continuous(breaks=seq(from=0, to=900000, by = 100000))+
+    geom_vline(xintercept = 1992, color = "red") +
+    theme(text = element_text(size=12))+
+    scale_y_continuous(labels=scales::comma) +
+    geom_hline(yintercept = 1992, color = "red") +
+    labs(title = "Cod caught in North America", 
+       x= "Time (Year)",
+       y= "Total Caught") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey50"),
+  panel.ontop = TRUE
+)
+
+ggarrange(newfoundland_graph, northamerica_graph) 
+```
+
+------
+
+# Assessment 2: Temportal Stock Trends
+
+## Stock Collapses
+
+In this portion, we sought to replicate the temporal trend in stock declines shown in [Worm et al 2006](http://doi.org/10.1126/science.1132294):
+
+![](http://espm-157.carlboettiger.info/img/worm2006.jpg)
+
+
+Here we are creating a master global fish table containing all species, year and collapse status. This status is calculated as defined by Worm's study as "defined here as catches dropping below 10% of the recorded maximum". There is a column that says False if the specific species has not collapsed, True if it has.
+
+```{r}
+fish_bigtable <- ram$timeseries %>% 
+  left_join(ram$stock) %>% 
+  left_join(ram$area) %>% 
+  left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) %>%
+  group_by(tsyear, scientificname)%>% 
+  summarize(total = sum(tsvalue, na.rm = T))  %>% 
+  ungroup() %>% 
+  group_by(scientificname) %>% 
+  mutate(cumulativemax = cummax(total), 
+         collapse = total < .1*cumulativemax) %>%
+  select(tsyear, collapse) %>% 
+  filter(tsyear > 1949)
+head(fish_bigtable)
+```
+
+Not all fish were being caught when the data was first starting to be collected, and not all fish are caught through the years. To adjust for this issue, we decide to fill the missing collapse status to False if the species has not been identified as collapsed, however, if they are then identified as collapsed, or True, we continued to fill in the missing status as True. This ensures that a row is present for every fish for every year. We make the assumption that once a fish species has collapsed, it's status will not be revived. 
+
+
+```{r message = F}
+expanded_fish <- fish_bigtable %>%
+  arrange(tsyear) %>%
+  expand(scientificname, tsyear=1950:2018) %>% 
+  left_join(fish_bigtable, by = c("tsyear", "scientificname")) %>% 
+  mutate(collapse = replace(collapse, is.na(collapse), FALSE) ) %>% 
+  mutate(collapse = cummax(collapse))
+head(expanded_fish)
+```
+
+We then counted the total number of collapsed species in each year.
+```{r}
+total_species_collapsed <- expanded_fish %>%
+  ungroup() %>% 
+  group_by(tsyear) %>% 
+  summarize(collapse_year = sum(collapse==T))
+head(total_species_collapsed)
+count_species <- fish_bigtable %>%
+  group_by(tsyear) %>% 
+  count(scientificname) %>%
+  summarize(sum_species = sum(n)) %>% 
+  arrange(sum_species)
+head(count_species)
+```
+
+Looking at our graph, we have less collapsed taxa percentage than Boris's graph. Around 2010, the percent of collapsed Taxa in Boris's study was around 80% whereas we notice our value ends a little greater than 50%. We notice a similar curviture in our analysis and Boris's analysis. Both include an increasing rate of change since the data was collected. We note that Boris's results are more steep than our own. We conclude that there may have more data points available since the paper was published in 2006.
+```{r message = F}
+total_species_collapsed %>% 
+  inner_join(count_species) %>% 
+  mutate(collapsed_taxa = (collapse_year/362)*100) %>% 
+  ggplot(aes(x=tsyear,y=collapsed_taxa)) + 
+    geom_point() + geom_smooth() +
+    scale_y_reverse()+
+  labs(title = "Collapsed Taxa over Years", 
+       x= "Time (Year)",
+       y= "% Collapsed") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey50"),
+  panel.ontop = TRUE
+)
+```
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+ram$stock
+library("tidyverse")
+library("readxl")
+library('ramlegacy')
+#ramlegacy::download_ramlegacy()
+ram <- ramlegacy::load_ramlegacy()
+names(ram)
+ram$stock
+ram$timeseries
+ram$tsmetrics
+ram$tsmetrics %>% value_counts()
+ram$tsmetrics %>% unique() %>% filter(tslong= "landing")
+unique(ram$tsmetrics) %>% filter(tslong= "landing")
+unique(ram$tsmetrics) %>% filter(tslong == "landing")
+unique(ram$tsmetrics) %>% filter(tslong == "landing ")
+unique(ram$tsmetrics) %>% filter(tslong == "Total ")
+ram$tsmetrics

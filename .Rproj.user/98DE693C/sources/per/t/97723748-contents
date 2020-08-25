@@ -1,0 +1,70 @@
+# Final project proposal
+
+- Cannabis Suitability Growth Analysis
+Inspired by the [Wildlife and Cannabis Ecology study at the Berkeley Cannabis Research Center](https://crc.berkeley.edu/current-projects/environment/wildlife-and-cannabis-ecology/?fbclid=IwAR2IUexgtbf-4v4iAK6KcUhBX_rG3hQumEklXOthx6wLsbWRHFsWlJIjvsQ). This is an analysis of the constraint and opportunity factors of cannabis cultivation in Illinois Valley, Josephine County, Southern Oregon. This is a spatial analysis of the growth potential. We will be using geospatial data to analyze the effects of zoning, hydrology, sunlight, road networks, and slopes. We will be comparing this to the author Phoebe Parker-Shames's mapped models. 
+
+
+Alice Hua, [@alicehua11](https://github.com/alicehua11)
+
+Julie Lum, [@julielumy](https://github.com/julielumy)
+
+Datasets Required
+The datasets are obtained through the author Parker-Shames, uploaded to a Google Drive folder.
+[Data Set](https://drive.google.com/open?id=1PzV858e4u2q2pi0_V_GpoXBIYOLB8m6s)
+
+1. Where are the ideal locations for cannabis to be grown based on natural factors such as sunlight, access to water (250m, well access) and slope(0-10m) and remoteness.
+2. What is the animal response to cannabis production
+3. Are the sites legal? what is the impact on global climate change?
+
+
+Replicating results of an existing study and exploring the impact of alternative assumptions in the data preparation, statistical methods chosen etc can provide an excellent template for an analysis (you'll see more of this in units 3 & 4)
+
+
+Please create your proposal in a markdown file called `proposal.md` in the root directory of the final project repo.  
+
+
+## Project Guidelines
+
+### Project questions must illustrate all of the following tasks:
+
+- Some form of data access / reading into R
+- Data tidying preparation
+- Initial data visualization
+- Use of GitHub
+- Reproducible execution with use of Travis
+- RMarkdown writeup, with final submission as a nicely formatted PDF document that includes code and results.
+- Overall clean and clear presentation of repository, code, and explanations.
+
+### and at least three of the following skills (this list may be modified/extended):
+
+- Use of at least 5 `dplyr` verbs / functions
+- Writing / working with custom R functions
+- Creating an R package for functions used in the analysis
+- Interaction with an API
+- Use of regular expressions
+- Use of an external relational database
+- Preparing processed data for archiving / publication
+- Parsing extensible data formats (JSON, XML)
+- Use of spatial vector data (`sf` package) and visualization of spatial data
+- Creation of an R package
+- Expansion of ggplot functions (to include more than default characteristics)
+- Making layout and presentation into secondary output (e.g. .pdf, website) - should enhance presentaiton
+- use lintr to clean code (checks adherence to a given style, syntax errors and possible semantic issues)
+
+# Final Rubric 30 pts total
+
+ - 5pts Proposal, turned in on time and with team member names, background, dataset, and 3 potential questions.
+
+ - 10pts Polished github repository, including:
+	 -  3pt updated readme with functional travis badge 
+	 -  2pt passing travis build 
+	 -  2pt clean and well formatted output document (html, pdf, or md with associated files). 
+	 -  3pt enough supporting text that we can easily understand the project undertaken.
+	 
+ - 15 pts Project Substance: Objectives, Code, Visualization. Do you meet all of the required project objectives and at least 3 of the supplementary objectives.
+	 - 15pts: exceptional
+	 - 13pts: adequate and complete
+	 - 11pts: adequate 2 questions, meeting 3 supplementary objectives
+	 - 9pts: adequate 2 q, meeting 1-2 supplementary objectives
+	 - 7pts: adequate 1 q, meeting 3 supplementary objectives
+	 - 5pts: adequate 1q, meeting 1-2 supplementary objectives

@@ -1,0 +1,6 @@
+"0","count_species <- fish_bigtable %>%"
+"0","  group_by(tsyear) %>% "
+"0","  count(scientificname) %>%"
+"0","  summarize(sum_species = sum(n)) %>% "
+"0","  arrange(sum_species)"
+"0","head(count_species)"

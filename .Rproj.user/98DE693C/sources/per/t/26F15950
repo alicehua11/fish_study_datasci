@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1569604810008.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2722905552",
+    "id" : "26F15950",
+    "lastKnownWriteTime" : 1572751033,
+    "last_content_update" : 1572751256013,
+    "path" : "C:/Users/alice/OneDrive/Schools/Berkeley/Fall2019/Rstudio/fish-hua-lum/assignment/fish-assignment-SQL.Rmd",
+    "project_path" : "assignment/fish-assignment-SQL.Rmd",
+    "properties" : {
+        "content_preview_enabled" : "true",
+        "cursorPosition" : "61,4",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

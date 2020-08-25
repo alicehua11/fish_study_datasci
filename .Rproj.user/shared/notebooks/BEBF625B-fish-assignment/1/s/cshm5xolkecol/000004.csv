@@ -1,0 +1,7 @@
+"0","expanded_fish <- fish_bigtable %>%"
+"0","  arrange(tsyear) %>%"
+"0","  expand(scientificname, tsyear=1950:2018) %>% "
+"0","  left_join(fish_bigtable, by = c(""tsyear"", ""scientificname"")) %>% "
+"0","  mutate(collapse = replace(collapse, is.na(collapse), FALSE) ) %>% "
+"0","  mutate(collapse = cummax(collapse))"
+"0","head(expanded_fish)"

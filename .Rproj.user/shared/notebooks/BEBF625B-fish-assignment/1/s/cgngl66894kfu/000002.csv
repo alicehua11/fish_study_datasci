@@ -1,0 +1,5 @@
+"0","total_species_collapsed <- expanded_fish %>%"
+"0","  ungroup() %>% "
+"0","  group_by(tsyear) %>% "
+"0","  summarize(collapse_year = sum(collapse==T))"
+"0","head(total_species_collapsed)"

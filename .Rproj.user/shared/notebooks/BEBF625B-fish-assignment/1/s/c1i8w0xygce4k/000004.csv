@@ -1,0 +1,12 @@
+"0","Cod_NA <- ram$timeseries %>% "
+"0","  left_join(ram$stock) %>% "
+"0","  left_join(ram$area) %>% "
+"0","  left_join(ram$tsmetrics, by = c(""tsid"" = ""tsunique"")) %>%"
+"0","  filter(country == ""Canada""| country == ""USA"", scientificname == ""Gadus morhua"")%>% "
+"0","  filter(tslong == ""Total catch (i.e. landings + discards. Add landings + discards to get this)."") %>%"
+"0","  arrange(tsyear)"
+"2","Joining, by = c(""stockid"", ""stocklong"")
+"
+"2","Joining, by = ""areaid""
+"
+"0","head(Cod_NA)"
